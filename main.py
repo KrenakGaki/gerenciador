@@ -7,6 +7,17 @@ from apagar_postmaster import apagar_postmaster
 from permissoes_postgres import adicionar_permissoes
 from portas_sistemas import liberacao_portas
 import psutil
+import ctypes
+
+# Verifica se é admin
+if not ctypes.windll.shell32.IsUserAnAdmin():
+    import sys
+    import os
+    # Reexecuta o script como administrador
+    ctypes.windll.shell32.ShellExecuteW(
+        None, "runas", sys.executable, " ".join(sys.argv), None, 1
+    )
+    sys.exit()
 
 # --- Configuração do tema ---
 ctk.set_appearance_mode("dark")
@@ -17,6 +28,7 @@ root = ctk.CTk()
 root.title("Gerenciador de Serviços 2.9")
 root.geometry("340x500+800+300")
 root.resizable(False, False)
+root.bind("<Escape>", lambda e: root.destroy())
 
 # --- Função para criar botões padronizados ---
 def criar_botao(frame, texto, comando):
@@ -168,7 +180,7 @@ btn_verificar_porta.grid(row=4, column=0, padx=5, pady=5, sticky="ew")
 btn_liberar_porta = criar_botao(frame_portas, "Não Funciona", None)
 btn_liberar_porta.grid(row=4, column=1, padx=5, pady=5, sticky="ew") 
 
-btn_firewall = criar_botao(frame_portas, "Liberação de Portas", liberacao_portas(root))
+btn_firewall = criar_botao(frame_portas, "Liberação de Portas", lambda: liberacao_portas(root))
 btn_firewall.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="ew") 
 
 

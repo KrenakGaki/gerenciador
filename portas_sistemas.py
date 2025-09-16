@@ -45,28 +45,34 @@ def liberacao_portas(root):
                         f"localport={porta}"
                     ]
                     try:
-                        subprocess.run(comando, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                        relatorio.append(f"Regra criada: {nome} - Porta {porta}/{protocolo} [{direcao}]")
-                        portas_adicionadas.append(f"{nome} - Porta {porta}/{protocolo} [{direcao}]")
+                        resultado = subprocess.run(comando, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                        print(resultado.stdout, resultado.stderr)
                     except subprocess.CalledProcessError as e:
+                        print("Erro:", e)
                         relatorio.append(f"Erro ao criar regra {nome}: {e}")
                         sucesso = False
 
         def mostrar_resultado():
+            
+            
+
+            # Janela com relatório das portas adicionadas
+            janela = CTkToplevel(root)
+            janela.title("Portas Adicionadas ao Firewall")
+            janela.geometry("480x300+1145+300")
+            janela.resizable(False, False)
+            janela.focus_set()
+            janela.bind("<Escape>", lambda e: janela.destroy())  # 
+            texto = CTkTextbox(janela, width=470, height=300)
+            texto.pack(padx=5, pady=5)
+            texto.insert("end", "\n".join(relatorio))
+            texto.configure(state="disabled")
+
             # Mensagem de sucesso/erro
             if sucesso:
                 messagebox.showinfo("Firewall", "Todas as regras foram aplicadas com sucesso!")
             else:
                 messagebox.showwarning("Firewall", "Algumas regras não foram aplicadas corretamente.")
-
-            # Janela com relatório das portas adicionadas
-            janela = CTkToplevel(root)
-            janela.title("Portas Adicionadas ao Firewall")
-            janela.geometry("400x350")
-            texto = CTkTextbox(janela, width=380, height=300)
-            texto.pack(padx=10, pady=10)
-            texto.insert("end", "\n".join(relatorio))
-            texto.configure(state="disabled")
 
         root.after(0, mostrar_resultado)
 
