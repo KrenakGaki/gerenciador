@@ -5,15 +5,13 @@ from variavelpath import adicionar_ao_path
 from crash_postgres import parar_postgres_thread
 from apagar_postmaster import apagar_postmaster
 from permissoes_postgres import adicionar_permissoes
-from portas_sistemas import liberacao_portas
+from liberacao_portas import criar_regras_firewall
 import psutil
 import ctypes
+import sys
 
 # Verifica se é admin
 if not ctypes.windll.shell32.IsUserAnAdmin():
-    import sys
-    import os
-    # Reexecuta o script como administrador
     ctypes.windll.shell32.ShellExecuteW(
         None, "runas", sys.executable, " ".join(sys.argv), None, 1
     )
@@ -113,9 +111,9 @@ def janela_verificar_porta():
             resultado_label.configure(text="Porta inválida!", text_color="red")
             return
 
-        for conn in psutil.net_connections():
-            if conn.laddr and conn.laddr.port == porta_int:
-                pid = conn.pid
+        for conexao in psutil.net_connections():
+            if conexao.laddr and conexao.laddr.port == porta_int:
+                pid = conexao.pid
                 if pid:
                     try:
                         proc = psutil.Process(pid)
@@ -173,14 +171,14 @@ def janela_verificar_porta():
     resultado_label = ctk.CTkLabel(frame_interno, text="", font=("Arial", 12))
     resultado_label.pack(pady=10)
 
-# Exemplo de botão para criar regras de firewall
+# --- Liberação de Portas, verificação ---
 btn_verificar_porta = criar_botao(frame_portas, "Verificar Porta", janela_verificar_porta)
 btn_verificar_porta.grid(row=4, column=0, padx=5, pady=5, sticky="ew")
 
 btn_liberar_porta = criar_botao(frame_portas, "Não Funciona", None)
 btn_liberar_porta.grid(row=4, column=1, padx=5, pady=5, sticky="ew") 
 
-btn_firewall = criar_botao(frame_portas, "Liberação de Portas", lambda: liberacao_portas(root))
+btn_firewall = criar_botao(frame_portas, "Liberação de Portas", lambda: criar_regras_firewall(root))
 btn_firewall.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="ew") 
 
 

@@ -54,8 +54,6 @@ def liberacao_portas(root):
 
         def mostrar_resultado():
             
-            
-
             # Janela com relatório das portas adicionadas
             janela = CTkToplevel(root)
             janela.title("Portas Adicionadas ao Firewall")
