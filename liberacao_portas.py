@@ -21,7 +21,6 @@ def liberar_regra(sistema, porta, protocolo, direcao):
     global sucesso
     nome_regra = f"{sistema} - {direcao.upper()} - Porta {porta} ({protocolo})"
 
-    # 1 - Verifica se a regra já existe
     check_cmd = f'netsh advfirewall firewall show rule name="{nome_regra}"'
     resultado = subprocess.run(check_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     comando = f'netsh advfirewall firewall add rule name="{nome_regra}" dir={direcao} action=allow protocol={protocolo} localport={porta}'
