@@ -1,5 +1,7 @@
 import subprocess
 import threading
+from tkinter import messagebox
+from customtkinter import CTkToplevel, CTkTextbox
 
 # Lista de regras de Firewall
 REGRAS_FIREWALL = [
@@ -11,8 +13,12 @@ REGRAS_FIREWALL = [
     {"sistema": "GESTORES UTILITARIOS", "porta": 9000, "protocolo": ["TCP", "UDP"]},
 ]
 
-def criar_regras_firewall():
+def liberacao_portas(root):
     def worker():
+        relatorio = []
+        sucesso = True
+        portas_adicionadas = []
+
         for regra in REGRAS_FIREWALL:
             nome_base = regra["sistema"]
             porta = regra["porta"]
@@ -26,6 +32,7 @@ def criar_regras_firewall():
                         capture_output=True, text=True
                     )
                     if "Não foram encontradas regras" not in resultado.stdout:
+                        relatorio.append(f"Regra já existe: {nome}")
                         continue
 
                     # Cria a regra
@@ -39,10 +46,28 @@ def criar_regras_firewall():
                     ]
                     try:
                         subprocess.run(comando, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                    except subprocess.CalledProcessError:
-                        pass
+                        relatorio.append(f"Regra criada: {nome} - Porta {porta}/{protocolo} [{direcao}]")
+                        portas_adicionadas.append(f"{nome} - Porta {porta}/{protocolo} [{direcao}]")
+                    except subprocess.CalledProcessError as e:
+                        relatorio.append(f"Erro ao criar regra {nome}: {e}")
+                        sucesso = False
+
+        def mostrar_resultado():
+            # Mensagem de sucesso/erro
+            if sucesso:
+                messagebox.showinfo("Firewall", "Todas as regras foram aplicadas com sucesso!")
+            else:
+                messagebox.showwarning("Firewall", "Algumas regras não foram aplicadas corretamente.")
+
+            # Janela com relatório das portas adicionadas
+            janela = CTkToplevel(root)
+            janela.title("Portas Adicionadas ao Firewall")
+            janela.geometry("400x350")
+            texto = CTkTextbox(janela, width=380, height=300)
+            texto.pack(padx=10, pady=10)
+            texto.insert("end", "\n".join(relatorio))
+            texto.configure(state="disabled")
+
+        root.after(0, mostrar_resultado)
 
     threading.Thread(target=worker, daemon=True).start()
-
-if __name__ == "__main__":
-    criar_regras_firewall()

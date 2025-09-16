@@ -5,8 +5,7 @@ from variavelpath import adicionar_ao_path
 from crash_postgres import parar_postgres_thread
 from apagar_postmaster import apagar_postmaster
 from permissoes_postgres import adicionar_permissoes
-from apps import taskkill_processo
-from portas_sistemas import criar_regras_firewall
+from portas_sistemas import liberacao_portas
 import psutil
 
 # --- Configuração do tema ---
@@ -166,10 +165,10 @@ def janela_verificar_porta():
 btn_verificar_porta = criar_botao(frame_portas, "Verificar Porta", janela_verificar_porta)
 btn_verificar_porta.grid(row=4, column=0, padx=5, pady=5, sticky="ew")
 
-btn_liberar_porta = criar_botao(frame_portas, "Não Funciona", criar_regras_firewall)
+btn_liberar_porta = criar_botao(frame_portas, "Não Funciona", None)
 btn_liberar_porta.grid(row=4, column=1, padx=5, pady=5, sticky="ew") 
 
-btn_firewall = criar_botao(frame_portas, "Não Funciona", criar_regras_firewall)
+btn_firewall = criar_botao(frame_portas, "Liberação de Portas", liberacao_portas(root))
 btn_firewall.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="ew") 
 
 
@@ -177,7 +176,4 @@ btn_firewall.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="ew")
 btn_sair = criar_botao(root, "Sair", root.quit)
 btn_sair.pack(pady=10)
 
-
-
 root.mainloop()
-

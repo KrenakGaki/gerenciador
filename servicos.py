@@ -23,7 +23,7 @@ processes_to_kill = [
     "pg_restore.exe","PgMaestro.exe","Restaurador.exe","Servidor.exe",
     "SincData.exe","Sintegra.exe","Sped_Contribuicoes.exe","Sped_Fiscal.exe",
     "StartMDe2.exe","StartSincData.exe","SvrPedidoMob.exe","WhatsAppMSG.exe",
-    "MonitorEasyInner.exe", "ServerNFCe.exe"
+    "MonitorEasyInner.exe", "ServerNFCe.exe", "ServerAPI.exe"
     ]
 
 # Inicia/para serviços

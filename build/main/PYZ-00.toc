@@ -274,10 +274,6 @@
    'C:\\Users\\Usuario\\Downloads\\Programar\\Python\\Novo '
    'Projeto\\new_menu\\apagar_postmaster.py',
    'PYMODULE'),
-  ('apps',
-   'C:\\Users\\Usuario\\Downloads\\Programar\\Python\\Novo '
-   'Projeto\\new_menu\\apps.py',
-   'PYMODULE'),
   ('argparse',
    'C:\\Users\\Usuario\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\argparse.py',
    'PYMODULE'),
